@@ -21,12 +21,21 @@ from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
 
+# #############################################
+# For testing
+import time
+# #############################################
+
+
 if __name__ == "__main__":
+    # TODO: make random by default, possible to input
     random.seed(133742069)
 
-    inv_build_weight = 7000.0
-    inv_flaggy_weight = 2000.0
-    inv_exp_weight = 3.0
+    inv_build_weight = 7000.0   # Seem arbitary, fix
+    inv_flaggy_weight = 2000.0  # Seem arbitary, fix
+    inv_exp_weight = 3.0  # Seem arbitary, fix
+    # #######################################################
+    # TODO: Make inputs for variables
     pop_size = 2000
     num_restarts = 1
     prob_cross_breed = 0.5
@@ -41,18 +50,24 @@ if __name__ == "__main__":
     min_generations = 100
     max_generations = 400
 
-    cog_datas_filename = "cog_datas.csv"
-    empties_datas_filename = "empties_datas.csv"
-    flaggies_datas_filename = "flaggies_datas.csv"
+    cog_datas_filename = "cog_datas.csv"  # File for cogs
+    # TODO: consider optional alternative file format
+    empties_datas_filename = "empties_datas.csv"  # File for empty spaces
+    # TODO: consider optional alternative file format
+    flaggies_datas_filename = "flaggies_datas.csv"  # Seprate file for flag locations
     output_filename = "output.txt"
+    # #######################################################
 
+#    tic = time.perf_counter()
     A = np.array([
-        [1.,1.,1.],
-        [inv_build_weight,-inv_flaggy_weight,0.],
-        [0.,inv_flaggy_weight,-inv_exp_weight]
+        [1., 1., 1.],
+        [inv_build_weight, -inv_flaggy_weight, 0.],
+        [0., inv_flaggy_weight, -inv_exp_weight]
     ])
     b = np.array([1.,0.,0.])
     build_weight, flaggy_weight, exp_weight = np.linalg.solve(A, b)
+#    toc = time.perf_counter()
+#    print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
 
     controller = (Iteration_Controller()
         .set_restart_info(num_restarts)
