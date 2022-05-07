@@ -26,6 +26,9 @@ import numpy as np
 
 def inversion_matrix(inv_build_weight, inv_flaggy_weight,
                            inv_exp_weight, debug=False):
+    inv_build_weight = 7000.0   # Seem arbitary
+    inv_flaggy_weight = 2000.0  # Seem arbitary
+    inv_exp_weight = 3.0  # Seem arbitary
     A = np.array([
         [1., 1., 1.],
         [inv_build_weight, -inv_flaggy_weight, 0.],

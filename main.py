@@ -80,9 +80,6 @@ def main():
     random.seed(args.seed)  # old value 133742069
     if debug:
         print("Seed: ", args.seed)
-    inv_build_weight = 7000.0   # Seem arbitary
-    inv_flaggy_weight = 2000.0  # Seem arbitary
-    inv_exp_weight = 3.0  # Seem arbitary
     pop_size = args.pop
     num_restarts = 1
     # TODO: figure out what these values mean in the context of the code
