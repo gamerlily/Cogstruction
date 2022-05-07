@@ -109,6 +109,17 @@ def main():
 
     fitness_fn = None
     if args.function == "average_affix_conversion":
+        weight_ttl = build_weight + flaggy_weight + exp_weight
+        build_weight = build_weight / weight_ttl
+        flaggy_weight = flaggy_weight / weight_ttl
+        exp_weight = exp_weight / weight_ttl
+        if debug:
+            print("Adj build_weight", "~" +\
+                  str(round(build_weight * 100, 2))+"%",
+                  "Adj flaggy_weight", "~" +\
+                  str(round(flaggy_weight * 100, 2))+"%",
+                  "Adj exp_weight", "~" +\
+                  str(round(exp_weight * 100, 2)) + "%")
         fitness_fn = average_affix_conversion_obj_fxn
     elif args.function == "invertion_matrix":
         build_weight, flaggy_weight, exp_weight =\
@@ -149,7 +160,7 @@ def main():
     )
     toc = time.perf_counter()
     if verbose or debug:
-        print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
+        print(f"Best cog array found in {toc - tic:0.4f} seconds")
 
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:

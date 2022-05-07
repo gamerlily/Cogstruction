@@ -46,15 +46,6 @@ def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight,
 
 def average_affix_conversion_obj_fxn(cog_array, build_weight, flaggy_weight,
                              exp_weight, debug=False):
-    """
-    if debug:
-        print("Array Values: ",
-            "Build rate:", str(round(cog_array.get_build_rate(), 3)).ljust(7),
-              "Flaggy rate:",
-              str(round(cog_array.get_flaggy_rate(), 3)).ljust(7),
-              "XP multiplier:", str(round(cog_array.get_total_exp_mult() *
-                                          100)) + "%")
-    """
     build_contrebution = build_weight *\
         ((3 * cog_array.get_build_rate()) /
          (5.5 * cog_array.get_num_occupied()))
@@ -67,14 +58,4 @@ def average_affix_conversion_obj_fxn(cog_array, build_weight, flaggy_weight,
         ((0.0003808514 * pow(exp_sub_sum, 3.968829)) +
          pow(exp_sub_sum, 1.075056) +
          0.8517081)
-
-    """
-    if debug:
-        print("Contrebutions:", "Build:",
-              str(round(build_contrebution, 3)).ljust(11),
-              " Flaggy:", str(round(flaggy_contrebution, 3)).ljust(11),
-              " Exp:", str(round(exp_contrebution, 3)).ljust(13),
-              " Sum:", round(build_contrebution + flaggy_contrebution +
-                             exp_contrebution, 3))
-    """
     return build_contrebution + flaggy_contrebution + exp_contrebution
