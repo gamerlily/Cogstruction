@@ -18,18 +18,17 @@ import numpy as np
 import argparse
 from datetime import datetime
 
-from learning_algo import Iteration_Controller,learning_algo
+from learning_algorithm.learning_algo import Iteration_Controller, learning_algo
+from learning_algorithm.fitness_functions import standard_obj_fxn
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
-
 
 
 # #############################################
 # For testing
 import time
 # #############################################
-
 
 def parseArgs():
     parser = argparse.ArgumentParser(description="A learning algorithm made "
@@ -106,8 +105,6 @@ def main():
     output_filename = "output.txt"
     # #######################################################
 
-    return 0
-
 #    tic = time.perf_counter()
     A = np.array([
         [1., 1., 1.],
@@ -135,7 +132,7 @@ def main():
         empties_set,
         set(),
         pop_size,
-        lambda cog: cog.standard_obj_fxn(build_weight,flaggy_weight,exp_weight),
+        lambda cog: standard_obj_fxn(cog,build_weight, flaggy_weight, exp_weight),
         factor_base,
         max_factor,
         max_multiplier,
