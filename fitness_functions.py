@@ -24,19 +24,19 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
 
 import numpy as np
 
-def inversion_matrix(inv_build_weight, inv_flaggy_weight,
-                           inv_exp_weight, debug=False):
-    inv_build_weight = 7000.0   # Seem arbitary
-    inv_flaggy_weight = 2000.0  # Seem arbitary
-    inv_exp_weight = 3.0  # Seem arbitary
+def inversion_matrix(input_build_weight, input_flaggy_weight, input_exp_weight,
+                     debug=False):
+    inv_build_weight = 7000.0 / input_build_weight   # Seem arbitary
+    inv_flaggy_weight = 2000.0 / input_flaggy_weight  # Seem arbitary
+    inv_exp_weight = 3.0 / input_exp_weight  # Seem arbitary
     A = np.array([
         [1., 1., 1.],
         [inv_build_weight, -inv_flaggy_weight, 0.],
         [0., inv_flaggy_weight, -inv_exp_weight]
     ])
-    b = np.array([1.,0.,0.])
-    build_weight, flaggy_weight, exp_weight = np.linalg.solve(A, b)
-    return build_weight, flaggy_weight, exp_weight
+    b = np.array([1., 0., 0.])
+    new_build_weight, new_flaggy_weight, new_exp_weight = np.linalg.solve(A, b)
+    return new_build_weight, new_flaggy_weight, new_exp_weight
 
 def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight,
                      debug=False):

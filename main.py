@@ -43,15 +43,15 @@ def parseArgs():
                         default="average_affix_conversion",
                         help="the fitness function that will be used to"
                         + " determine a cog array's fitness value.")
-    parser.add_argument("--bw", "--build_weight", type=float,
+    parser.add_argument("--build_weight", "--bw", type=float,
                         default=1.0,
                         help="the weight of the build speed in the fitness " +
                         "function")
-    parser.add_argument("--fw", "--flaggy_weight", type=float,
+    parser.add_argument("--flaggy_weight", "--fw", type=float,
                         default=1.0,
                         help="the weight of the flaggy speed in the fitness " +
                         "function")
-    parser.add_argument("--ew", "--exp_weight", type=float,
+    parser.add_argument("--exp_weight", "--ew", type=float,
                         default=1.0,
                         help="the weight of the exp bonus in the fitness " +
                         "function")
@@ -82,6 +82,9 @@ def main():
         print("Seed: ", args.seed)
     pop_size = args.pop
     num_restarts = 1
+    build_weight = args.build_weight
+    flaggy_weight = args.flaggy_weight
+    exp_weight = args.exp_weight
     # TODO: figure out what these values mean in the context of the code
     prob_cross_breed = 0.5
     prob_one_point_mutation = 0.25
@@ -105,7 +108,7 @@ def main():
 
 
     build_weight, flaggy_weight, exp_weight =\
-        inversion_matrix(inv_build_weight, inv_flaggy_weight, inv_exp_weight)
+        inversion_matrix(build_weight, flaggy_weight, exp_weight)
 
     controller = (Iteration_Controller()
         .set_restart_info(num_restarts)
