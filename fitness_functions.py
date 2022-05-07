@@ -22,10 +22,21 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
 - ''obj_fnx'' is an abbreviation of ''objective function''.
 """
 
-def apply_inversion_matrix():
-    
+import numpy as np
 
-def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight):
+def inversion_matrix(inv_build_weight, inv_flaggy_weight,
+                           inv_exp_weight, debug=False):
+    A = np.array([
+        [1., 1., 1.],
+        [inv_build_weight, -inv_flaggy_weight, 0.],
+        [0., inv_flaggy_weight, -inv_exp_weight]
+    ])
+    b = np.array([1.,0.,0.])
+    build_weight, flaggy_weight, exp_weight = np.linalg.solve(A, b)
+    return build_weight, flaggy_weight, exp_weight
+
+def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight,
+                     debug=False):
     return cog_array.get_build_rate() * build_weight +\
         cog_array.get_flaggy_rate() * flaggy_weight +\
         cog_array.get_total_exp_mult() * exp_weight

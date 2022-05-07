@@ -19,7 +19,7 @@ import argparse
 from datetime import datetime
 
 from learning_algo import Iteration_Controller, learning_algo
-from fitness_functions import standard_obj_fxn
+from fitness_functions import standard_obj_fxn, inversion_matrix
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
@@ -106,20 +106,16 @@ def main():
     output_filename = "output.txt"
     # #######################################################
 
-    A = np.array([
-        [1., 1., 1.],
-        [inv_build_weight, -inv_flaggy_weight, 0.],
-        [0., inv_flaggy_weight, -inv_exp_weight]
-    ])
-    b = np.array([1.,0.,0.])
-    build_weight, flaggy_weight, exp_weight = np.linalg.solve(A, b)
+
+    build_weight, flaggy_weight, exp_weight =\
+        inversion_matrix(inv_build_weight, inv_flaggy_weight, inv_exp_weight)
 
     controller = (Iteration_Controller()
         .set_restart_info(num_restarts)
-        .set_generation_info(min_generations,max_generations,max_running_total_len,req_running_total)
+        .set_generation_info(min_generations, max_generations, max_running_total_len, req_running_total)
         .set_mutation_info(num_mutations)
-        .set_breeding_scheme_info(prob_cross_breed,prob_one_point_mutation,prob_two_point_mutation)
-    )
+        .set_breeding_scheme_info(prob_cross_breed, prob_one_point_mutation, prob_two_point_mutation)
+                  )
     cog_datas = read_cog_datas(cog_datas_filename)
     empties = read_empties_datas(empties_datas_filename)
     empties_set = Empties_Set(empties)
