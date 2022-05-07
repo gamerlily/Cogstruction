@@ -62,6 +62,9 @@ def parseArgs():
                         help="number of times to try running the simulation")
     parser.add_argument("--verbosity", action='store_true',
                         help="increase output verbosity")
+    parser.add_argument("-d", "--debug", action='store_true',
+                        help="sends program into debug mode, will print a"
+                        + " lot of debug messages")
     parser.add_argument("-v", "--version", action='version',
                         version='Cogstruction 2.0')
     args = parser.parse_args()
@@ -70,16 +73,19 @@ def parseArgs():
 
 def main():
     args = parseArgs()
+    debug = args.debug
+    if debug:
+        print("Debug mode enabled")
     # TODO: make random by default, possible to input
-    random.seed(datetime.now())  # old value 133742069
-
-    inv_build_weight = 7000.0   # Seem arbitary, fix
-    inv_flaggy_weight = 2000.0  # Seem arbitary, fix
-    inv_exp_weight = 3.0  # Seem arbitary, fix
-    pop_size = 2000
+    random.seed(args.seed)  # old value 133742069
+    if debug:
+        print("Seed: ", args.seed)
+    inv_build_weight = 7000.0   # Seem arbitary
+    inv_flaggy_weight = 2000.0  # Seem arbitary
+    inv_exp_weight = 3.0  # Seem arbitary
+    pop_size = args.pop
     num_restarts = 1
-    return
-    # TODO: figure out what these values mean
+    # TODO: figure out what these values mean in the context of the code
     prob_cross_breed = 0.5
     prob_one_point_mutation = 0.25
     prob_two_point_mutation = 0.25
@@ -99,6 +105,8 @@ def main():
     flaggies_datas_filename = "flaggies_datas.csv"  # Seprate file for flag locations
     output_filename = "output.txt"
     # #######################################################
+
+    return 0
 
 #    tic = time.perf_counter()
     A = np.array([
