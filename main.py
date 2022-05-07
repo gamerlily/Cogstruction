@@ -15,6 +15,7 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
 
 import random
 import numpy as np
+from datetime import datetime
 
 from learning_algo import Iteration_Controller,learning_algo
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
@@ -29,7 +30,7 @@ import time
 
 if __name__ == "__main__":
     # TODO: make random by default, possible to input
-    random.seed(133742069)
+    random.seed(datetime.now()) # old value 133742069
 
     inv_build_weight = 7000.0   # Seem arbitary, fix
     inv_flaggy_weight = 2000.0  # Seem arbitary, fix
