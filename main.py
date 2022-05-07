@@ -15,6 +15,7 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
 
 import random
 import numpy as np
+import argparse
 from datetime import datetime
 
 from learning_algo import Iteration_Controller,learning_algo
@@ -22,23 +23,63 @@ from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
 
+
+
 # #############################################
 # For testing
 import time
 # #############################################
 
 
-if __name__ == "__main__":
+def parseArgs():
+    parser = argparse.ArgumentParser(description="A learning algorithm made "
+                                     + "for optemizing the distrebution of "
+                                     + "gears in the construction skill in "
+                                     + "idleon. All arguments are optional.")
+    parser.add_argument("-s", "--seed", type=int, default=datetime.now(),
+                        help="the random seed to use for this run")
+    parser.add_argument("-f", "--function",
+                        choices=["average_affix_conversion",
+                                 "invertion_matrix"],
+                        default="average_affix_conversion",
+                        help="the fitness function that will be used to"
+                        + " determine a cog array's fitness value.")
+    parser.add_argument("--bw", "--build_weight", type=float,
+                        default=1.0,
+                        help="the weight of the build speed in the fitness " +
+                        "function")
+    parser.add_argument("--fw", "--flaggy_weight", type=float,
+                        default=1.0,
+                        help="the weight of the flaggy speed in the fitness " +
+                        "function")
+    parser.add_argument("--ew", "--exp_weight", type=float,
+                        default=1.0,
+                        help="the weight of the exp bonus in the fitness " +
+                        "function")
+    parser.add_argument("--pop", type=int, default=2000,
+                        help="size of the cog_array population")
+    parser.add_argument("--runs", type=int, default=1,
+                        help="number of times to try running the simulation")
+    parser.add_argument("--verbosity", action='store_true',
+                        help="increase output verbosity")
+    parser.add_argument("-v", "--version", action='version',
+                        version='Cogstruction 2.0')
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    args = parseArgs()
     # TODO: make random by default, possible to input
-    random.seed(datetime.now()) # old value 133742069
+    random.seed(datetime.now())  # old value 133742069
 
     inv_build_weight = 7000.0   # Seem arbitary, fix
     inv_flaggy_weight = 2000.0  # Seem arbitary, fix
     inv_exp_weight = 3.0  # Seem arbitary, fix
-    # #######################################################
-    # TODO: Make inputs for variables
     pop_size = 2000
     num_restarts = 1
+    return
+    # TODO: figure out what these values mean
     prob_cross_breed = 0.5
     prob_one_point_mutation = 0.25
     prob_two_point_mutation = 0.25
@@ -95,4 +136,8 @@ if __name__ == "__main__":
 
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
-        fh.write(str(best[0]))
+        fh.write(str(best[0]))    
+
+
+if __name__ == "__main__":
+    main()
