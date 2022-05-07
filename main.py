@@ -18,8 +18,8 @@ import numpy as np
 import argparse
 from datetime import datetime
 
-from learning_algorithm.learning_algo import Iteration_Controller, learning_algo
-from learning_algorithm.fitness_functions import standard_obj_fxn
+from learning_algo import Iteration_Controller, learning_algo
+from fitness_functions import standard_obj_fxn
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
@@ -73,6 +73,7 @@ def parseArgs():
 def main():
     args = parseArgs()
     debug = args.debug
+    verbose = args.verbosity
     if debug:
         print("Debug mode enabled")
     # TODO: make random by default, possible to input
@@ -105,7 +106,6 @@ def main():
     output_filename = "output.txt"
     # #######################################################
 
-#    tic = time.perf_counter()
     A = np.array([
         [1., 1., 1.],
         [inv_build_weight, -inv_flaggy_weight, 0.],
@@ -113,8 +113,6 @@ def main():
     ])
     b = np.array([1.,0.,0.])
     build_weight, flaggy_weight, exp_weight = np.linalg.solve(A, b)
-#    toc = time.perf_counter()
-#    print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
 
     controller = (Iteration_Controller()
         .set_restart_info(num_restarts)
@@ -127,17 +125,24 @@ def main():
     empties_set = Empties_Set(empties)
     cogs = cog_factory(cog_datas)
 
+    if debug:
+        print("Timer started")
+    tic = time.perf_counter()
     best = learning_algo(
         cogs,
         empties_set,
         set(),
         pop_size,
-        lambda cog: standard_obj_fxn(cog,build_weight, flaggy_weight, exp_weight),
+        lambda cog: standard_obj_fxn(
+            cog, build_weight, flaggy_weight, exp_weight),
         factor_base,
         max_factor,
         max_multiplier,
         controller
     )
+    toc = time.perf_counter()
+    if verbose or debug:
+        print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
 
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
