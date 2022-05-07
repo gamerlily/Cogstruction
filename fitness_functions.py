@@ -46,20 +46,35 @@ def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight,
 
 def average_affix_conversion_obj_fxn(cog_array, build_weight, flaggy_weight,
                              exp_weight, debug=False):
+    """
     if debug:
-        print("Build rate:", cog_array.get_build_rate())
+        print("Array Values: ",
+            "Build rate:", str(round(cog_array.get_build_rate(), 3)).ljust(7),
+              "Flaggy rate:",
+              str(round(cog_array.get_flaggy_rate(), 3)).ljust(7),
+              "XP multiplier:", str(round(cog_array.get_total_exp_mult() *
+                                          100)) + "%")
+    """
     build_contrebution = build_weight *\
         ((3 * cog_array.get_build_rate()) /
          (5.5 * cog_array.get_num_occupied()))
-    if debug:
-        print("Flaggy rate:", cog_array.get_build_rate())
-    flaggy_contrebution = flaggy_weight *\
-        ((3 * cog_array.get_flaggy_rate()) /
-         (5.5 * cog_array.get_num_occupied()))
-    if debug:
-        print("XP multiplier:", cog_array.get_total_exp_mult())
-    exp_contrebution = exp_weight *\
-        ((3 * cog_array.get_total_exp_mult()) /
-         (5.5 * cog_array.cog_array.get_num_occupied()))
+    flaggy_sub_formula = ((3 * cog_array.get_flaggy_rate()) /
+             (11 * cog_array.get_num_occupied()))
+    flaggy_contrebution = flaggy_weight * 2 * pow(flaggy_sub_formula, 1.25)
+    exp_sub_sum = ((3 * cog_array.get_total_exp_mult() * 100) /
+                   (11 * cog_array.get_num_occupied()))
+    exp_contrebution = exp_weight * 2 *\
+        ((0.0003808514 * pow(exp_sub_sum, 3.968829)) +
+         pow(exp_sub_sum, 1.075056) +
+         0.8517081)
 
+    """
+    if debug:
+        print("Contrebutions:", "Build:",
+              str(round(build_contrebution, 3)).ljust(11),
+              " Flaggy:", str(round(flaggy_contrebution, 3)).ljust(11),
+              " Exp:", str(round(exp_contrebution, 3)).ljust(13),
+              " Sum:", round(build_contrebution + flaggy_contrebution +
+                             exp_contrebution, 3))
+    """
     return build_contrebution + flaggy_contrebution + exp_contrebution

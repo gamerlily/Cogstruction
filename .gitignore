@@ -1,2 +1,4 @@
 *.pyc
 output.txt
+cog_datas.csv
+*.csv

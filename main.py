@@ -19,7 +19,8 @@ import argparse
 from datetime import datetime
 
 from learning_algo import Iteration_Controller, learning_algo
-from fitness_functions import standard_obj_fxn, inversion_matrix
+from fitness_functions import standard_obj_fxn, inversion_matrix,\
+average_affix_conversion_obj_fxn
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
@@ -106,9 +107,19 @@ def main():
     output_filename = "output.txt"
     # #######################################################
 
-
-    build_weight, flaggy_weight, exp_weight =\
-        inversion_matrix(build_weight, flaggy_weight, exp_weight)
+    fitness_fn = None
+    if args.function == "average_affix_conversion":
+        fitness_fn = average_affix_conversion_obj_fxn
+    elif args.function == "invertion_matrix":
+        build_weight, flaggy_weight, exp_weight =\
+            inversion_matrix(build_weight, flaggy_weight, exp_weight)
+        fitness_fn = standard_obj_fxn
+    else:
+        if debug:
+            raise Exception("Unknown fitness function", args.function)
+        else:
+            print("Unknown fitness function")
+        return -1
 
     controller = (Iteration_Controller()
         .set_restart_info(num_restarts)
@@ -129,8 +140,8 @@ def main():
         empties_set,
         set(),
         pop_size,
-        lambda cog: standard_obj_fxn(
-            cog, build_weight, flaggy_weight, exp_weight),
+        lambda cog: fitness_fn(
+            cog, build_weight, flaggy_weight, exp_weight, debug),
         factor_base,
         max_factor,
         max_multiplier,
