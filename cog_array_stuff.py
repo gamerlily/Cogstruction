@@ -427,13 +427,6 @@ class Cog_Array:
         #     self.exp_rate = total_rate + total_bonus
         return self.total_exp_mult
 
-    """
-    - A convex combination (i.e. weighted average) of the build, flaggy, and exp rates. 
-    - ''obj_fnx'' is an abbreviation of ''objective function''.
-    """
-    def standard_obj_fxn(self,build_weight,flaggy_weight,exp_weight):
-        return self.get_build_rate() * build_weight + self.get_flaggy_rate() * flaggy_weight + self.get_total_exp_mult() * exp_weight
-
     def get_num_spares(self):
         return len(self.spares)
 
