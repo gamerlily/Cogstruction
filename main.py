@@ -76,13 +76,17 @@ def parseArgs():
 
 def weight_string(build_weight, flaggy_weight, exp_weight, prefix, sufix,\
                   mul = 1):
+    min_weight = min(build_weight, flaggy_weight, exp_weight)
     str_to_print = \
-        str(prefix) + " build_weight:" + str(round(build_weight * mul, 2)) +\
-        str(sufix) + "\n" +\
-        str(prefix) + " flaggy_weight:" + str(round(flaggy_weight * mul, 2)) +\
-        str(sufix) + "\n" +\
-        str(prefix) + " exp_weight:" + str(round(exp_weight * mul, 2)) +\
-        str(sufix)
+        str(prefix) + " build_weight:".ljust(18) +\
+        (str(round(build_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (build_weight / min_weight)).rjust(7) + "\n" +\
+        str(prefix) + " flaggy_weight:".ljust(18) +\
+        (str(round(flaggy_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (flaggy_weight / min_weight)).rjust(7) + "\n" +\
+        str(prefix) + " exp_weight:".ljust(18) +\
+        (str(round(exp_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (exp_weight / min_weight)).rjust(7)
     return str_to_print
     
 
@@ -144,6 +148,9 @@ def main():
     elif args.function == "invertion_matrix" or args.function == "im":
         build_weight, flaggy_weight, exp_weight =\
             inversion_matrix(build_weight, flaggy_weight, exp_weight)
+        if debug:
+            print(weight_string(build_weight, flaggy_weight,
+                  exp_weight, "Adj", "%", 100))
         fitness_fn = standard_obj_fxn
     else:
         if debug:
@@ -178,11 +185,11 @@ def main():
         max_multiplier,
         controller,
         lambda cog: fitness_fn(
-            cog, build_weight, 0, 0, debug),    
+            cog, build_weight, 0, 0, debug),
         lambda cog: fitness_fn(
             cog, 0, flaggy_weight, 0, debug),
         lambda cog: fitness_fn(
-            cog, 0, 0, exp_weight, debug)       
+            cog, 0, 0, exp_weight, debug)
     )
 
     toc = time.perf_counter()

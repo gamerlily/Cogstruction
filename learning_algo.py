@@ -155,15 +155,19 @@ class Iteration_Controller:
                       ((self.perc_improve_from_original(0.90) - 1) * 100))
                 print("\t\t50th %%ile improvement from original: %1.3f%%" %
                       ((self.perc_improve_from_original(0.50) - 1) * 100))
-                round_best = self.curr_pop.get_best()
-                print("\t\tBest so far:".ljust(20) + "%.4f".ljust(8) %
-                      (round_best[1]))
-                print("\t\tBuild rate far:".ljust(20) + "%d".ljust(8) %
-                      round_best[0].get_build_rate())
-                print("\t\tFlaggy rate far:".ljust(20) + "%d".ljust(8) %
-                      round_best[0].get_flaggy_rate())
-                print("\t\tExp mult far:".ljust(20) + "%d%%".ljust(8) %
-                      (100 * round_best[0].get_total_exp_mult()))
+                round_best = self.curr_pop.get_best_with_contributions()
+                print("\t\tBest so far:".ljust(20) +
+                      ("%.4f" % (round_best[1])).ljust(8) +
+                      "contribution".ljust(13))
+                print("\t\tBuild rate far:".ljust(20) +
+                      ("%d" % round_best[0].get_build_rate()).ljust(8) +
+                      ("%.4f" % (round_best[2])).ljust(13))
+                print("\t\tFlaggy rate far:".ljust(20) +
+                      ("%d" % round_best[0].get_flaggy_rate()).ljust(8) +
+                      ("%.4f" % (round_best[3])).ljust(13))
+                print("\t\tExp mult far:".ljust(20) + ("%d%%" %
+                      (100 * round_best[0].get_total_exp_mult())).ljust(8) +
+                      ("%.4f" % (round_best[4])).ljust(13))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
 
@@ -224,7 +228,10 @@ class Population:
 
     def get_best_with_contributions(self):
         self.sort()
-        return self.arrays[0], self.values[0]
+        return self.arrays[0], self.values[0],\
+            self.build_obj_fxn(self.arrays[0]),\
+            self.flaggy_obj_fxn(self.arrays[0]),\
+            self.exp_obj_fxn(self.arrays[0])
 
     def get_mean(self):
         return np.mean(self.values)
