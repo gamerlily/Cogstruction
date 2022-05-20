@@ -156,13 +156,13 @@ class Iteration_Controller:
                 print("\t\t50th %%ile improvement from original: %1.3f%%" %
                       ((self.perc_improve_from_original(0.50) - 1) * 100))
                 self.best = self.curr_pop.get_best()
-                print("\t\tBest so far:".ljust(20) + "%.4f" %
+                print("\t\tBest so far:".ljust(20) + "%.4f".ljust(8) %
                       (self.best[1]))
-                print("\t\tBuild rate far:".ljust(20) + "%d" %
+                print("\t\tBuild rate far:".ljust(20) + "%d".ljust(8) %
                       self.best[0].get_build_rate())
-                print("\t\tFlaggy rate far:".ljust(20) + "%d" %
+                print("\t\tFlaggy rate far:".ljust(20) + "%d".ljust(8) %
                       self.best[0].get_flaggy_rate())
-                print("\t\tExp mult far:".ljust(20) + "%d%%" %
+                print("\t\tExp mult far:".ljust(20) + "%d%%".ljust(8) %
                       (100 * self.best[0].get_total_exp_mult()))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
