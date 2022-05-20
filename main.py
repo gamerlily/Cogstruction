@@ -39,11 +39,11 @@ def parseArgs():
     parser.add_argument("-s", "--seed", type=int, default=datetime.now(),
                         help="the random seed to use for this run")
     parser.add_argument("-f", "--function",
-                        choices=["average_affix_conversion",
-                                 "invertion_matrix"],
+                        choices=["aac", "average_affix_conversion",
+                                 "im", "invertion_matrix"],
                         default="average_affix_conversion",
-                        help="the fitness function that will be used to"
-                        + " determine a cog array's fitness value.")
+                        help="the fitness function that will be used to" +
+                        " determine a cog array's fitness value.")
     parser.add_argument("--build_weight", "--bw", type=float,
                         default=1.0,
                         help="the weight of the build speed in the fitness " +
