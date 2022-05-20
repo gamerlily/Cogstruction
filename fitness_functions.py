@@ -38,6 +38,12 @@ def inversion_matrix(input_build_weight, input_flaggy_weight, input_exp_weight,
     new_build_weight, new_flaggy_weight, new_exp_weight = np.linalg.solve(A, b)
     return new_build_weight, new_flaggy_weight, new_exp_weight
 
+def weight_normalization(input_build_weight, input_flaggy_weight,
+                         input_exp_weight, debug=False):
+    weight_ttl = input_build_weight + input_flaggy_weight + input_exp_weight
+    return input_build_weight / weight_ttl, input_flaggy_weight / weight_ttl,\
+           input_exp_weight / weight_ttl
+
 def standard_obj_fxn(cog_array, build_weight, flaggy_weight, exp_weight,
                      debug=False):
     return cog_array.get_build_rate() * build_weight +\

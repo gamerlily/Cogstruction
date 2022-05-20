@@ -20,7 +20,7 @@ from datetime import datetime
 
 from learning_algo import Iteration_Controller, learning_algo
 from fitness_functions import standard_obj_fxn, inversion_matrix,\
-average_affix_conversion_obj_fxn
+    average_affix_conversion_obj_fxn, weight_normalization
 from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
@@ -66,18 +66,32 @@ def parseArgs():
                         help="sends program into debug mode, will print a"
                         + " lot of debug messages")
     parser.add_argument("-v", "--version", action='version',
-                        version='Cogstruction 2.0')
+                        version='Cogstruction 1.1.1 a')
     args = parser.parse_args()
     return args
 
 
+def weight_string(build_weight, flaggy_weight, exp_weight, prefix, sufix,\
+                  mul = 1):
+    str_to_print = \
+        str(prefix) + " build_weight:" + str(round(build_weight * mul, 2)) +\
+        str(sufix) + "\n" +\
+        str(prefix) + " flaggy_weight:" + str(round(flaggy_weight * mul, 2)) +\
+        str(sufix) + "\n" +\
+        str(prefix) + " exp_weight:" + str(round(exp_weight * mul, 2)) +\
+        str(sufix)
+    return str_to_print
+    
+
+
 def main():
+    #####################
+    # Initialize Variables
     args = parseArgs()
     debug = args.debug
     verbose = args.verbosity
     if debug:
         print("Debug mode enabled")
-    # TODO: make random by default, possible to input
     random.seed(args.seed)  # old value 133742069
     if debug:
         print("Seed: ", args.seed)
@@ -98,28 +112,28 @@ def main():
     max_running_total_len = 10
     min_generations = 100
     max_generations = 400
+    #####################
 
+
+    #####################
+    # Initialize Cog file names
     cog_datas_filename = "cog_datas.csv"  # File for cogs
     # TODO: consider optional alternative file format
     empties_datas_filename = "empties_datas.csv"  # File for empty spaces
     # TODO: consider optional alternative file format
     flaggies_datas_filename = "flaggies_datas.csv"  # Seprate file for flag locations
     output_filename = "output.txt"
-    # #######################################################
+    #####################
 
+    
     fitness_fn = None
     if args.function == "average_affix_conversion":
-        weight_ttl = build_weight + flaggy_weight + exp_weight
-        build_weight = build_weight / weight_ttl
-        flaggy_weight = flaggy_weight / weight_ttl
-        exp_weight = exp_weight / weight_ttl
+        build_weight, flaggy_weight, exp_weight =\
+            weight_normalization(
+                build_weight, flaggy_weight, exp_weight, debug)
         if debug:
-            print("Adj build_weight", "~" +\
-                  str(round(build_weight * 100, 2))+"%",
-                  "Adj flaggy_weight", "~" +\
-                  str(round(flaggy_weight * 100, 2))+"%",
-                  "Adj exp_weight", "~" +\
-                  str(round(exp_weight * 100, 2)) + "%")
+            print(weight_string(build_weight, flaggy_weight,
+                  exp_weight, "Adj", "%", 100))
         fitness_fn = average_affix_conversion_obj_fxn
     elif args.function == "invertion_matrix":
         build_weight, flaggy_weight, exp_weight =\
@@ -161,7 +175,7 @@ def main():
     toc = time.perf_counter()
     if verbose or debug:
         print(f"Best cog array found in {toc - tic:0.4f} seconds")
-
+    
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
         fh.write(str(best[0]))    
