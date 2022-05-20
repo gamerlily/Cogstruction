@@ -165,7 +165,6 @@ class Iteration_Controller:
                 print("\t\tExp mult far:".ljust(20) + "%d%%".ljust(8) %
                       (100 * round_best[0].get_total_exp_mult()))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
-                print(round_best)
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
 
     def perc_improve_from_original(self,perc):
@@ -194,12 +193,16 @@ class Iteration_Controller:
 - A population of `Cog_Arrays'.
 """
 class Population:
-    def __init__(self,arrays,obj_fxn):
+    def __init__(self, arrays, obj_fxn,
+                 build_obj_fxn, flaggy_obj_fxn, exp_obj_fxn):
         self.arrays = arrays
         self.obj_fxn = obj_fxn
         self.values = list(map(self.obj_fxn,self.arrays))
         self.is_sorted = False
         self.pop_size = len(arrays)
+        self.build_obj_fxn = build_obj_fxn
+        self.flaggy_obj_fxn = flaggy_obj_fxn
+        self.exp_obj_fxn = exp_obj_fxn
 
     def add(self,array):
         self.arrays.append(array)
@@ -252,7 +255,9 @@ class Population:
         return len(self.arrays)
 
     def __copy__(self):
-        return Population([copy.copy(array) for array in self.arrays], self.obj_fxn)
+        return Population([copy.copy(array) for array in self.arrays],
+                          self.obj_fxn, self.build_obj_fxn,
+                          self.flaggy_obj_fxn, self.exp_obj_fxn)
 
 """
 The genetic algorithm.
@@ -311,7 +316,8 @@ def learning_algo(
             cog_array = Cog_Array(empties_set,None,excludes_dict)
             cog_array.instantiate_randomly(cogs)
             pop.append(cog_array)
-        pop = Population(pop,obj_fxn)
+        pop = Population(pop, obj_fxn,
+                         build_obj_fxn, flaggy_obj_fxn, exp_obj_fxn)
 
         controller.set_pop(pop)
         controller.print_restart_status_open()
