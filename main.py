@@ -32,7 +32,7 @@ from cog_array_stuff import Empties_Set
 import time
 # #############################################
 
-VERSION = 'Cogstruction L 1.1.1 a'
+VERSION = 'Cogstruction 1.1.2 L'
 
 def parseArgs():
     parser = argparse.ArgumentParser(description="A learning algorithm made "
