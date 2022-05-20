@@ -77,6 +77,10 @@ if __name__ == "__main__":
         controller
     )
 
+    print("Reading previous cog array data %s" % output_filename)
+    with open(output_filename, "r") as fh:
+        print(fh.readlines())
+
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
         fh.write(str(best[0]))
