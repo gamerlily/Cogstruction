@@ -149,9 +149,21 @@ class Iteration_Controller:
         if self.generation_count % 10 == 1:
             print("\tGeneration:                             %d" % (self.generation_count-1))
             if self.generation_count >= 11:
-                print("\t\tMax improvement from original pop:    %1.3f%%" % ((self.best_improve_from_original()-1)*100))
-                print("\t\t90th %%ile improvement from original: %1.3f%%" % ((self.perc_improve_from_original(0.90)-1)*100))
-                print("\t\t50th %%ile improvement from original: %1.3f%%" % ((self.perc_improve_from_original(0.50)-1)*100))
+                print("\t\tMax improvement from original pop:    %1.3f%%" %
+                      ((self.best_improve_from_original() - 1) * 100))
+                print("\t\t90th %%ile improvement from original: %1.3f%%" %
+                      ((self.perc_improve_from_original(0.90) - 1) * 100))
+                print("\t\t50th %%ile improvement from original: %1.3f%%" %
+                      ((self.perc_improve_from_original(0.50) - 1) * 100))
+                self.best = self.curr_pop.get_best()
+                print("\t\tBest so far:".ljust(20) + "%.4f" %
+                      (self.best[1]))
+                print("\t\tBuild rate far:".ljust(20) + "%d" %
+                      self.best[0].get_build_rate())
+                print("\t\tFlaggy rate far:".ljust(20) + "%d" %
+                      self.best[0].get_flaggy_rate())
+                print("\t\tExp mult far:".ljust(20) + "%d%%" %
+                      (100 * self.best[0].get_total_exp_mult()))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
 
@@ -165,11 +177,12 @@ class Iteration_Controller:
         if self.restart_count == 1:
             self.best = self.curr_pop.get_best()
         else:
-            self.best = max([self.best, self.curr_pop.get_best()], key=lambda t: t[1])
-        print("Best so far:                          %.4f" % (self.best[1]))
-        print("Build rate:                           %d" % self.best[0].get_build_rate())
-        print("Flaggy rate:                          %d" % self.best[0].get_flaggy_rate())
-        print("Exp mult:                             %d%%" % (100 * self.best[0].get_total_exp_mult()))
+            self.best = max(
+                [self.best, self.curr_pop.get_best()], key=lambda t: t[1])
+        print("Best so far:".ljust(20) + "%.4f" % (self.best[1]))
+        print("Build rate:".ljust(20) + "%d" % self.best[0].get_build_rate())
+        print("Flaggy rate:".ljust(20) + "%d" % self.best[0].get_flaggy_rate())
+        print("Exp mult:".ljust(20) + "%d%%" % (100 * self.best[0].get_total_exp_mult()))
 
     def print_init_info(self):
         print("NUM RESTARTS:   %d" % self.num_restarts)

@@ -42,11 +42,11 @@ def parseArgs():
     parser.add_argument("-s", "--seed", type=int, default=datetime.now(),
                         help="the random seed to use for this run")
     parser.add_argument("-f", "--function",
-                        choices=["average_affix_conversion",
-                                 "invertion_matrix"],
+                        choices=["aac", "average_affix_conversion",
+                                 "im", "invertion_matrix"],
                         default="average_affix_conversion",
-                        help="the fitness function that will be used to"
-                        + " determine a cog array's fitness value.")
+                        help="the fitness function that will be used to" +
+                        " determine a cog array's fitness value.")
     parser.add_argument("--build_weight", "--bw", type=float,
                         default=1.0,
                         help="the weight of the build speed in the fitness " +
@@ -120,17 +120,20 @@ def main():
 
     #####################
     # Initialize Cog file names
-    cog_datas_filename = "cog_datas.csv"  # File for cogs
+    # File for cogs
+    cog_datas_filename = "cog_datas.csv"
     # TODO: consider optional alternative file format
-    empties_datas_filename = "empties_datas.csv"  # File for empty spaces
+    # File for empty spaces
+    empties_datas_filename = "empties_datas.csv"
     # TODO: consider optional alternative file format
-    flaggies_datas_filename = "flaggies_datas.csv"  # Seprate file for flag locations
+    # Seprate file for flag locations
+    flaggies_datas_filename = "flaggies_datas.csv"
     output_filename = "output.txt"
     #####################
 
     
     fitness_fn = None
-    if args.function == "average_affix_conversion":
+    if args.function == "average_affix_conversion" or args.function == "aac":
         build_weight, flaggy_weight, exp_weight =\
             weight_normalization(
                 build_weight, flaggy_weight, exp_weight, debug)
@@ -138,7 +141,7 @@ def main():
             print(weight_string(build_weight, flaggy_weight,
                   exp_weight, "Adj", "%", 100))
         fitness_fn = average_affix_conversion_obj_fxn
-    elif args.function == "invertion_matrix":
+    elif args.function == "invertion_matrix" or args.function == "im":
         build_weight, flaggy_weight, exp_weight =\
             inversion_matrix(build_weight, flaggy_weight, exp_weight)
         fitness_fn = standard_obj_fxn
