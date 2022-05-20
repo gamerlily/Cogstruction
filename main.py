@@ -176,7 +176,13 @@ def main():
         factor_base,
         max_factor,
         max_multiplier,
-        controller
+        controller,
+        lambda cog: fitness_fn(
+            cog, build_weight, 0, 0, debug),    
+        lambda cog: fitness_fn(
+            cog, 0, flaggy_weight, 0, debug),
+        lambda cog: fitness_fn(
+            cog, 0, 0, exp_weight, debug)       
     )
 
     toc = time.perf_counter()

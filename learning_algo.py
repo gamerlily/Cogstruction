@@ -155,16 +155,17 @@ class Iteration_Controller:
                       ((self.perc_improve_from_original(0.90) - 1) * 100))
                 print("\t\t50th %%ile improvement from original: %1.3f%%" %
                       ((self.perc_improve_from_original(0.50) - 1) * 100))
-                self.best = self.curr_pop.get_best()
+                round_best = self.curr_pop.get_best()
                 print("\t\tBest so far:".ljust(20) + "%.4f".ljust(8) %
-                      (self.best[1]))
+                      (round_best[1]))
                 print("\t\tBuild rate far:".ljust(20) + "%d".ljust(8) %
-                      self.best[0].get_build_rate())
+                      round_best[0].get_build_rate())
                 print("\t\tFlaggy rate far:".ljust(20) + "%d".ljust(8) %
-                      self.best[0].get_flaggy_rate())
+                      round_best[0].get_flaggy_rate())
                 print("\t\tExp mult far:".ljust(20) + "%d%%".ljust(8) %
-                      (100 * self.best[0].get_total_exp_mult()))
+                      (100 * round_best[0].get_total_exp_mult()))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
+                print(round_best)
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
 
     def perc_improve_from_original(self,perc):
@@ -216,7 +217,11 @@ class Population:
         return random.sample(list(zip(self.arrays,self.values)),k)
 
     def get_best(self):
-        return self.sort().arrays[0],self.values[0]
+        return self.sort().arrays[0], self.values[0]
+
+    def get_best_with_contributions(self):
+        self.sort()
+        return self.arrays[0], self.values[0]
 
     def get_mean(self):
         return np.mean(self.values)
@@ -273,7 +278,10 @@ def learning_algo(
         factor_base,
         max_factor,
         max_multiplier,
-        controller
+        controller,
+        build_obj_fxn,
+        flaggy_obj_fxn,
+        exp_obj_fxn
 ):
 
     controller.print_init_info()
