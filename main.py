@@ -13,6 +13,7 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
     GNU General Public License for more details.
 """
 
+
 import random
 import numpy as np
 import argparse
@@ -21,7 +22,7 @@ from datetime import datetime
 from learning_algo import Iteration_Controller, learning_algo
 from fitness_functions import standard_obj_fxn, inversion_matrix,\
     average_affix_conversion_obj_fxn, weight_normalization
-from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
+from file_readers import read_cog_datas, read_empties_datas, read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
 
@@ -30,6 +31,8 @@ from cog_array_stuff import Empties_Set
 # For testing
 import time
 # #############################################
+
+VERSION = 'Cogstruction L 1.1.1 a'
 
 def parseArgs():
     parser = argparse.ArgumentParser(description="A learning algorithm made "
@@ -66,7 +69,7 @@ def parseArgs():
                         help="sends program into debug mode, will print a"
                         + " lot of debug messages")
     parser.add_argument("-v", "--version", action='version',
-                        version='Cogstruction 1.1.1 a')
+                        version=VERSION)
     args = parser.parse_args()
     return args
 
@@ -178,13 +181,16 @@ def main():
         print(f"Best cog array found in {toc - tic:0.4f} seconds")
 
     print("Reading previous cog array data %s" % output_filename)
-    with open(output_filename, "r") as fh:
-        print(fh.readlines())
-    
+    try:
+        with open(output_filename, "r") as fh:
+            print(fh.readline())
+    except BaseException as err:
+        print("No previous array file found at " + output_filename)
+
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
-        fh.write(str(best[0]))    
-
+        fh.writelines([VERSION, "\r\n"])
+        fh.write(str(best[0]))
 
 if __name__ == "__main__":
     main()
