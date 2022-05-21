@@ -17,6 +17,7 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
 import random
 import numpy as np
 import argparse
+import time
 from datetime import datetime
 
 from learning_algo import Iteration_Controller, learning_algo
@@ -26,11 +27,6 @@ from file_readers import read_cog_datas, read_empties_datas, read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
 
-
-# #############################################
-# For testing
-import time
-# #############################################
 
 VERSION = 'Cogstruction 1.1.2 L'
 
