@@ -57,9 +57,13 @@ def parseArgs():
                         "function")
     parser.add_argument("--pop", type=int, default=2000,
                         help="size of the cog_array population")
+    parser.add_argument("--gen_min", type=int, default=100,
+                        help="size of the cog_array population")
+    parser.add_argument("--gen_max", type=int, default=400,
+                        help="size of the cog_array population")
     parser.add_argument("--runs", type=int, default=1,
                         help="number of times to try running the simulation")
-    parser.add_argument("--verbosity", action='store_true',
+    parser.add_argument("--verbose", action='store_true',
                         help="increase output verbosity")
     parser.add_argument("-d", "--debug", action='store_true',
                         help="sends program into debug mode, will print a"
@@ -92,7 +96,7 @@ def main():
     # Initialize Variables
     args = parseArgs()
     debug = args.debug
-    verbose = args.verbosity
+    verbose = args.verbose
     if debug:
         print("Debug mode enabled")
     random.seed(args.seed)  # old value 133742069
@@ -113,8 +117,8 @@ def main():
     max_multiplier = 16
     req_running_total = 0.01
     max_running_total_len = 10
-    min_generations = 100
-    max_generations = 400
+    min_generations = args.gen_min
+    max_generations = args.gen_max
     #####################
 
 
@@ -128,7 +132,10 @@ def main():
     # TODO: consider optional alternative file format
     # Seprate file for flag locations
     flaggies_datas_filename = "flaggies_datas.csv"
+    # TODO: consider seprate output location
     output_filename = "output.txt"
+    # previous output
+    previous_output_filename = "output.txt"
     #####################
 
     
@@ -203,6 +210,9 @@ def main():
     with open(output_filename, "w") as fh:
         fh.writelines([VERSION, "\r\n"])
         fh.write(str(best[0]))
+
+    if debug:
+        print(best[0].csv_record())
 
 if __name__ == "__main__":
     main()

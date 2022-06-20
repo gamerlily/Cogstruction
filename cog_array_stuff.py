@@ -190,6 +190,34 @@ class Cog_Array:
     def __ne__(self, other):
         return not(self==other)
 
+    def csv_record(self):
+        ret = ""
+        line = ""
+        i = 1
+        """for coords in Coords_Iter():
+            if coords.x == 0 and coords.y > 0:
+                ret = line + "\n\n" + ret
+                line = ""
+            if coords in self.empties_set:
+                line += "E   "
+            elif not self.is_occupied(coords):
+                line += "e   "
+            else:
+                line += str(i) + " " * (3 - int(np.log10(i)))
+                i += 1"""
+        ret = line + "\n\n" + ret
+        ret = self.str_with_abbr() + "\n\n\n" + ret
+        for i, (coords, cog) in enumerate(self):
+            ret += (
+                ("Cog %d\n" % (i + 1)) +
+                ("Coords:            %s\n" % coords) +
+                (str(cog)) +
+                "\n\n\n"
+            )
+        for cog in self.spares:
+            ret += ("Spare Cog\n" + str(cog) + "\n\n\n")
+        return ret.strip()
+    
     "Call it and see =)"
     def str_with_abbr(self):
         ret = ""
