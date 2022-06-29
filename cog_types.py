@@ -42,10 +42,20 @@ class Cog:
 
     def __str__(self):
         return (
-             ("Type:               %s\n" % self.__class__.__name__) +
+            ("Type:               %s\n" % self.__class__.__name__) +
             (("Build rate:         %d\n" % self.build_rate) if self.build_rate > 0 else "") +
             (("Flaggy rate:        %d\n" % self.flaggy_rate) if self.flaggy_rate > 0 else "") +
-            (("Exp mult:           %d%%\n" % (self.exp_mult * 100)) if self.exp_mult > 0 else "")
+            (("Exp mult:           %d%%\n" %
+               (self.exp_mult * 100)) if self.exp_mult > 0 else "")
+        ).strip()
+    
+    def csv_record(self):
+        return (
+            ("%s," % self.__class__.__name__) +
+            (("%d," % self.build_rate) if self.build_rate > 0 else "") +
+            (("%d," % self.flaggy_rate) if self.flaggy_rate > 0 else "") +
+            (("%d%%" %
+               (self.exp_mult * 100)) if self.exp_mult > 0 else "")
         ).strip()
 
     """

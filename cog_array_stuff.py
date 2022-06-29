@@ -194,15 +194,17 @@ class Cog_Array:
         ret = ""
         line = ""
         i = 1
+        ret += "ID,Xpos,Ypos,Type,Name,Build_r,Flaggy_Rate,Exp_Mul"
         for i, (coords, cog) in enumerate(self):
             ret += (
-                ("Cog %d\n" % (i + 1)) +
-                ("Coords:            %s\n" % coords) +
-                (str(cog)) +
-                "\n\n\n"
+                ("%d," % (i + 1)) +
+                ("%d," % coords.x) +
+                ("%d," % coords.y) +
+                (cog.csv_record()) +
+                "\n"
             )
         for cog in self.spares:
-            ret += ("Spare Cog\n" + str(cog) + "\n\n\n")
+            ret += ("Spare,Spare,Spare," + cog.csv_record() + "\n")
         return ret.strip()
     
     "Call it and see =)"
