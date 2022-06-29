@@ -2,7 +2,9 @@
 
 "Cogstruction" is a genetic algorithm that produces high quality cog arrays for the construction skill in the game "Legends of Idleon".
 
-I have abandoned this project. I am not responding to questions or requests. Fork and share at your pleasure.
+I have picked up the project after it was abandoned, quote from the original developer:
+
+"I have abandoned this project. I am not responding to questions or requests. Fork and share at your pleasure."
 
 # How to get
 There are two options.
