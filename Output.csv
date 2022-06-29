@@ -1,0 +1,119 @@
+ID,Xpos,Ypos,Type,Name,Build_Rate,Flaggy_Rate,Exp_Mul,Build_r_Boost,Flaggy_r_boost,Flaggy_s_boost,Exp_boost
+1,3,0,Type:               X_Cog
+Build rate:         42,,12%,,
+2,4,0,Cog,,2,2,2%
+3,5,0,Cog,,10,,5%
+4,6,0,Cog,,2,6,4%
+5,7,0,Cog,,72,,
+6,8,0,Cog,,10,,7%
+7,2,1,Character,Blade,449,120,
+8,3,1,Type:               Plus_Cog
+Flaggy rate:        18,11%,,,
+9,4,1,Type:               Down_Cog
+Build rate:         17
+Exp mult:           3%,,8%,,
+10,5,1,Cog,,31,31,
+11,6,1,Type:               X_Cog
+Build rate:         46,9%,,,
+12,7,1,Cog,,21,,6%
+13,8,1,Type:               Up_Cog
+Build rate:         9
+Flaggy rate:        9,15%,,,
+14,9,1,Cog,,,6,7%
+15,1,2,Cog,,30,14,11%
+16,2,2,Cog,,37,,8%
+17,3,2,Cog,,13,,5%
+18,4,2,Cog,,48,9,
+19,5,2,Type:               X_Cog
+Build rate:         14
+Flaggy rate:        6,10%,,,
+20,6,2,Type:               Right_Cog
+Build rate:         38,13%,,,
+21,7,2,Character,Lily,449,120,
+22,8,2,Cog,,,6,2%
+23,9,2,Cog,,,,10%
+24,10,2,Character,Wildswoman,449,120,
+25,1,3,Cog,,5,7,3%
+26,2,3,Cog,,5,6,6%
+27,3,3,Type:               Plus_Cog
+Build rate:         8
+Flaggy rate:        2,9%,,,
+28,4,3,Cog,,,,8%
+29,5,3,Type:               Plus_Cog
+Build rate:         15
+Flaggy rate:        8,14%,,,
+30,6,3,Cog,,8,3,2%
+31,7,3,Type:               X_Cog
+Build rate:         21,,8%,,
+32,8,3,Cog,,28,12,12%
+33,9,3,Cog,,9,8,8%
+34,10,3,Cog,,27,13,
+35,1,4,Type:               X_Cog
+Flaggy rate:        3
+Exp mult:           2%,7%,,,
+36,2,4,Cog,,28,,10%
+37,3,4,Type:               X_Cog
+Build rate:         20
+Exp mult:           7%,11%,,,
+38,4,4,Type:               Left_Cog
+Build rate:         20,,11%,,
+39,5,4,Cog,,44,7,
+40,6,4,Character,Via,298,85,
+41,7,4,Type:               Plus_Cog
+Build rate:         25,10%,,,
+42,8,4,Type:               X_Cog
+Build rate:         25,12%,,,
+43,9,4,Cog,,,,7%
+44,10,4,Cog,,12,,34%
+45,1,5,Type:               Plus_Cog
+Build rate:         11
+Flaggy rate:        11,13%,,,
+46,2,5,Cog,,13,,7%
+47,3,5,Type:               X_Cog
+Build rate:         50,,12%,,
+48,4,5,Type:               Plus_Cog
+Build rate:         16
+Flaggy rate:        10,10%,,,
+49,5,5,Cog,,28,24,
+50,6,5,Cog,,6,8,14%
+51,7,5,Character,Luky,465,124,
+52,8,5,Type:               Plus_Cog
+Build rate:         12
+Flaggy rate:        2,8%,,,
+53,9,5,Character,Tempt,433,117,
+54,10,5,Cog,,37,14,12%
+55,2,6,Cog,,12,,7%
+56,3,6,Cog,,69,20,11%
+57,4,6,Cog,,11,10,18%
+58,5,6,Cog,,35,,4%
+59,6,6,Type:               Plus_Cog
+Build rate:         46,9%,,,
+60,7,6,Cog,,8,9,12%
+61,8,6,Type:               X_Cog
+Build rate:         15,,13%,,
+62,9,6,Cog,,8,,5%
+63,3,7,Type:               Right_Cog
+Build rate:         14
+Flaggy rate:        5,,9%,,
+64,4,7,Cog,,116,8,
+65,5,7,Cog,,18,,2%
+66,6,7,Cog,,17,,27%
+67,7,7,Cog,,26,7,
+68,8,7,Type:               Down_Cog
+Build rate:         8
+Flaggy rate:        4
+Exp mult:           2%,8%,,,
+Spare,Spare,Spare,Cog,,7,,3%
+Spare,Spare,Spare,Cog,,24,,11%
+Spare,Spare,Spare,Cog,,9,,7%
+Spare,Spare,Spare,Cog,,7,19,
+Spare,Spare,Spare,Cog,,6,,8%
+Spare,Spare,Spare,Cog,,50,,
+Spare,Spare,Spare,Cog,,11,,2%
+Spare,Spare,Spare,Type:               Plus_Cog
+Build rate:         14
+Exp mult:           6%,10%,,,
+Spare,Spare,Spare,Cog,,37,,8%
+Spare,Spare,Spare,Cog,,16,8,2%
+Spare,Spare,Spare,Type:               Plus_Cog
+Build rate:         13,10%,,,

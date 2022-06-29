@@ -194,7 +194,7 @@ class Cog_Array:
         ret = ""
         line = ""
         i = 1
-        ret += "ID,Xpos,Ypos,Type,Name,Build_r,Flaggy_Rate,Exp_Mul"
+        ret += "ID,Xpos,Ypos,Type,Name,Build_Rate,Flaggy_Rate,Exp_Mul,Build_r_Boost,Flaggy_r_boost,Flaggy_s_boost,Exp_boost\n"
         for i, (coords, cog) in enumerate(self):
             ret += (
                 ("%d," % (i + 1)) +

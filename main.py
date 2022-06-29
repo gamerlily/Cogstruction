@@ -211,8 +211,13 @@ def main():
         fh.writelines([VERSION, "\r\n"])
         fh.write(str(best[0]))
 
+    
+    print("Writing best cog array save data to %s" % "Output.csv")
+    with open("Output.csv", "w") as fh:
+        fh.write(best[0].csv_record())
+
     if debug:
-        print(best[0].csv_record())
+        print(str(best[0]))
 
 if __name__ == "__main__":
     main()
