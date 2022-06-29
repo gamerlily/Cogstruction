@@ -134,8 +134,8 @@ def main():
     flaggies_datas_filename = "flaggies_datas.csv"
     # TODO: consider seprate output location
     output_filename = "output.txt"
-    # previous output
-    previous_output_filename = "output.txt"
+    # CSV output file
+    previous_output_filename = "output.csv"
     #####################
 
     
@@ -212,8 +212,8 @@ def main():
         fh.write(str(best[0]))
 
     
-    print("Writing best cog array save data to %s" % "Output.csv")
-    with open("Output.csv", "w") as fh:
+    print("Writing best cog array save data to %s" % previous_output_filename)
+    with open(previous_output_filename, "w") as fh:
         fh.write(best[0].csv_record())
 
     if debug:

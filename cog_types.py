@@ -174,7 +174,7 @@ class Boost_Cog(Cog):
 
     def csv_record(self):
         return (
-            super().__str__() + ","
+            super().csv_record() + ","
             + (("%d%%," % int(self.build_rate_boost*100)) if self.build_rate_boost > 0 else ",")
             + (("%d%%," % int(self.flaggy_rate_boost*100)) if self.flaggy_rate_boost > 0 else ",")
             + (("%d%%," % int(self.flaggy_speed_boost * 100)) if self.flaggy_speed_boost > 0 else ",")
