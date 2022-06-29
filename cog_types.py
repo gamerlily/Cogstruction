@@ -42,10 +42,21 @@ class Cog:
 
     def __str__(self):
         return (
-             ("Type:               %s\n" % self.__class__.__name__) +
+            ("Type:               %s\n" % self.__class__.__name__) +
             (("Build rate:         %d\n" % self.build_rate) if self.build_rate > 0 else "") +
             (("Flaggy rate:        %d\n" % self.flaggy_rate) if self.flaggy_rate > 0 else "") +
-            (("Exp mult:           %d%%\n" % (self.exp_mult * 100)) if self.exp_mult > 0 else "")
+            (("Exp mult:           %d%%\n" %
+               (self.exp_mult * 100)) if self.exp_mult > 0 else "")
+        ).strip()
+    
+    def csv_record(self):
+        return (
+            ("%s," % self.__class__.__name__) +
+            (",") +
+            (("%d," % self.build_rate) if self.build_rate > 0 else ",") +
+            (("%d," % self.flaggy_rate) if self.flaggy_rate > 0 else ",") +
+            (("%d%%" %
+               (self.exp_mult * 100)) if self.exp_mult > 0 else "")
         ).strip()
 
     """
@@ -132,6 +143,16 @@ class Character(Cog):
             ("Exp rate:           %d\n" % self.exp_rate)
         ).strip()
 
+    def csv_record(self):
+        return (
+            ("%s," % self.__class__.__name__) +
+            ("%s," % self.name) +
+            (("%d," % self.build_rate) if self.build_rate > 0 else ",") +
+            (("%d," % self.flaggy_rate) if self.flaggy_rate > 0 else ",") +
+            (("%d%%" %
+               (self.exp_mult * 100)) if self.exp_mult > 0 else "")
+        ).strip()
+
 
 class Boost_Cog(Cog):
     def __init__(self, build_rate, flaggy_rate, exp_mult, build_rate_boost, flaggy_rate_boost, flaggy_speed_boost, exp_boost):
@@ -143,11 +164,22 @@ class Boost_Cog(Cog):
 
     def __str__(self):
         return (
-            super().__str__() + "\n" +
-            (("Build rate boost:   %d%%\n" % int(self.build_rate_boost*100)) if self.build_rate_boost > 0 else "") +
-            (("Flaggy rate boost:  %d%%\n" % int(self.flaggy_rate_boost*100)) if self.flaggy_rate_boost > 0 else "") +
-            (("Flaggy speed boost: %d%%\n" % int(self.flaggy_speed_boost * 100)) if self.flaggy_speed_boost > 0 else "") +
-            (("Exp boost:          %d%%\n" % int(self.exp_boost * 100)) if self.exp_boost > 0 else "")
+            super().__str__() + "\n"
+            + (("Build rate boost:   %d%%\n" % int(self.build_rate_boost*100)) if self.build_rate_boost > 0 else "")
+            + (("Flaggy rate boost:  %d%%\n" % int(self.flaggy_rate_boost*100)) if self.flaggy_rate_boost > 0 else "")
+            + (("Flaggy speed boost: %d%%\n" % int(self.flaggy_speed_boost * 100)) if self.flaggy_speed_boost > 0 else "")
+            + (("Exp boost:          %d%%\n" %
+               int(self.exp_boost * 100)) if self.exp_boost > 0 else "")
+        ).strip()
+
+    def csv_record(self):
+        return (
+            super().csv_record() + ","
+            + (("%d%%," % int(self.build_rate_boost*100)) if self.build_rate_boost > 0 else ",")
+            + (("%d%%," % int(self.flaggy_rate_boost*100)) if self.flaggy_rate_boost > 0 else ",")
+            + (("%d%%," % int(self.flaggy_speed_boost * 100)) if self.flaggy_speed_boost > 0 else ",")
+            + (("%d%%" %
+               int(self.exp_boost * 100)) if self.exp_boost > 0 else "")
         ).strip()
 
 

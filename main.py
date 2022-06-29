@@ -13,23 +13,22 @@ Cogstruction: Optimizing cog arrays in Legends of Idleon
     GNU General Public License for more details.
 """
 
+
 import random
 import numpy as np
 import argparse
+import time
 from datetime import datetime
 
 from learning_algo import Iteration_Controller, learning_algo
 from fitness_functions import standard_obj_fxn, inversion_matrix,\
     average_affix_conversion_obj_fxn, weight_normalization
-from file_readers import read_cog_datas,read_empties_datas,read_flaggies_datas
+from file_readers import read_cog_datas, read_empties_datas, read_flaggies_datas
 from cog_factory import cog_factory
 from cog_array_stuff import Empties_Set
 
 
-# #############################################
-# For testing
-import time
-# #############################################
+VERSION = 'Cogstruction 1.1.2 L'
 
 def parseArgs():
     parser = argparse.ArgumentParser(description="A learning algorithm made "
@@ -58,28 +57,36 @@ def parseArgs():
                         "function")
     parser.add_argument("--pop", type=int, default=2000,
                         help="size of the cog_array population")
+    parser.add_argument("--gen_min", type=int, default=100,
+                        help="size of the cog_array population")
+    parser.add_argument("--gen_max", type=int, default=400,
+                        help="size of the cog_array population")
     parser.add_argument("--runs", type=int, default=1,
                         help="number of times to try running the simulation")
-    parser.add_argument("--verbosity", action='store_true',
+    parser.add_argument("--verbose", action='store_true',
                         help="increase output verbosity")
     parser.add_argument("-d", "--debug", action='store_true',
                         help="sends program into debug mode, will print a"
                         + " lot of debug messages")
     parser.add_argument("-v", "--version", action='version',
-                        version='Cogstruction 1.1.1 a')
+                        version=VERSION)
     args = parser.parse_args()
     return args
 
 
 def weight_string(build_weight, flaggy_weight, exp_weight, prefix, sufix,\
                   mul = 1):
+    min_weight = min(build_weight, flaggy_weight, exp_weight)
     str_to_print = \
-        str(prefix) + " build_weight:" + str(round(build_weight * mul, 2)) +\
-        str(sufix) + "\n" +\
-        str(prefix) + " flaggy_weight:" + str(round(flaggy_weight * mul, 2)) +\
-        str(sufix) + "\n" +\
-        str(prefix) + " exp_weight:" + str(round(exp_weight * mul, 2)) +\
-        str(sufix)
+        str(prefix) + " build_weight:".ljust(18) +\
+        (str(round(build_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (build_weight / min_weight)).rjust(7) + "\n" +\
+        str(prefix) + " flaggy_weight:".ljust(18) +\
+        (str(round(flaggy_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (flaggy_weight / min_weight)).rjust(7) + "\n" +\
+        str(prefix) + " exp_weight:".ljust(18) +\
+        (str(round(exp_weight * mul, 2)) + str(sufix)).ljust(8) +\
+        " ratio: " + ("%.2f" % (exp_weight / min_weight)).rjust(7)
     return str_to_print
     
 
@@ -89,7 +96,7 @@ def main():
     # Initialize Variables
     args = parseArgs()
     debug = args.debug
-    verbose = args.verbosity
+    verbose = args.verbose
     if debug:
         print("Debug mode enabled")
     random.seed(args.seed)  # old value 133742069
@@ -110,24 +117,30 @@ def main():
     max_multiplier = 16
     req_running_total = 0.01
     max_running_total_len = 10
-    min_generations = 100
-    max_generations = 400
+    min_generations = args.gen_min
+    max_generations = args.gen_max
     #####################
 
 
     #####################
     # Initialize Cog file names
-    cog_datas_filename = "cog_datas.csv"  # File for cogs
+    # File for cogs
+    cog_datas_filename = "cog_datas.csv"
     # TODO: consider optional alternative file format
-    empties_datas_filename = "empties_datas.csv"  # File for empty spaces
+    # File for empty spaces
+    empties_datas_filename = "empties_datas.csv"
     # TODO: consider optional alternative file format
-    flaggies_datas_filename = "flaggies_datas.csv"  # Seprate file for flag locations
+    # Seprate file for flag locations
+    flaggies_datas_filename = "flaggies_datas.csv"
+    # TODO: consider seprate output location
     output_filename = "output.txt"
+    # CSV output file
+    previous_output_filename = "output.csv"
     #####################
 
     
     fitness_fn = None
-    if args.function == "average_affix_conversion":
+    if args.function == "average_affix_conversion" or args.function == "aac":
         build_weight, flaggy_weight, exp_weight =\
             weight_normalization(
                 build_weight, flaggy_weight, exp_weight, debug)
@@ -135,9 +148,12 @@ def main():
             print(weight_string(build_weight, flaggy_weight,
                   exp_weight, "Adj", "%", 100))
         fitness_fn = average_affix_conversion_obj_fxn
-    elif args.function == "invertion_matrix":
+    elif args.function == "invertion_matrix" or args.function == "im":
         build_weight, flaggy_weight, exp_weight =\
             inversion_matrix(build_weight, flaggy_weight, exp_weight)
+        if debug:
+            print(weight_string(build_weight, flaggy_weight,
+                  exp_weight, "Adj", "%", 100))
         fitness_fn = standard_obj_fxn
     else:
         if debug:
@@ -170,16 +186,38 @@ def main():
         factor_base,
         max_factor,
         max_multiplier,
-        controller
+        controller,
+        lambda cog: fitness_fn(
+            cog, build_weight, 0, 0, debug),
+        lambda cog: fitness_fn(
+            cog, 0, flaggy_weight, 0, debug),
+        lambda cog: fitness_fn(
+            cog, 0, 0, exp_weight, debug)
     )
+
     toc = time.perf_counter()
     if verbose or debug:
         print(f"Best cog array found in {toc - tic:0.4f} seconds")
-    
+
+    print("Reading previous cog array data %s" % output_filename)
+    try:
+        with open(output_filename, "r") as fh:
+            print(fh.readline())
+    except BaseException as err:
+        print("No previous array file found at " + output_filename)
+
     print("Writing best cog array to %s" % output_filename)
     with open(output_filename, "w") as fh:
-        fh.write(str(best[0]))    
+        fh.writelines([VERSION, "\r\n"])
+        fh.write(str(best[0]))
 
+    
+    print("Writing best cog array save data to %s" % previous_output_filename)
+    with open(previous_output_filename, "w") as fh:
+        fh.write(best[0].csv_record())
+
+    if debug:
+        print(str(best[0]))
 
 if __name__ == "__main__":
     main()

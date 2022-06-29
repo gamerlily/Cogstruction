@@ -149,9 +149,25 @@ class Iteration_Controller:
         if self.generation_count % 10 == 1:
             print("\tGeneration:                             %d" % (self.generation_count-1))
             if self.generation_count >= 11:
-                print("\t\tMax improvement from original pop:    %1.3f%%" % ((self.best_improve_from_original()-1)*100))
-                print("\t\t90th %%ile improvement from original: %1.3f%%" % ((self.perc_improve_from_original(0.90)-1)*100))
-                print("\t\t50th %%ile improvement from original: %1.3f%%" % ((self.perc_improve_from_original(0.50)-1)*100))
+                print("\t\tMax improvement from original pop:    %1.3f%%" %
+                      ((self.best_improve_from_original() - 1) * 100))
+                print("\t\t90th %%ile improvement from original: %1.3f%%" %
+                      ((self.perc_improve_from_original(0.90) - 1) * 100))
+                print("\t\t50th %%ile improvement from original: %1.3f%%" %
+                      ((self.perc_improve_from_original(0.50) - 1) * 100))
+                round_best = self.curr_pop.get_best_with_contributions()
+                print("\t\tBest so far:".ljust(20) +
+                      ("%.4f" % (round_best[1])).ljust(8) +
+                      "contribution".ljust(13))
+                print("\t\tBuild rate far:".ljust(20) +
+                      ("%d" % round_best[0].get_build_rate()).ljust(8) +
+                      ("%.4f" % (round_best[2])).ljust(13))
+                print("\t\tFlaggy rate far:".ljust(20) +
+                      ("%d" % round_best[0].get_flaggy_rate()).ljust(8) +
+                      ("%.4f" % (round_best[3])).ljust(13))
+                print("\t\tExp mult far:".ljust(20) + ("%d%%" %
+                      (100 * round_best[0].get_total_exp_mult())).ljust(8) +
+                      ("%.4f" % (round_best[4])).ljust(13))
                 print(self.curr_pop.get_best()[0].str_with_abbr())
                 # print("\t\t%% cross-breeds:                      %d%%\n" % int(100*self.cross_breed_count/self.mutation_count))
 
@@ -165,11 +181,12 @@ class Iteration_Controller:
         if self.restart_count == 1:
             self.best = self.curr_pop.get_best()
         else:
-            self.best = max([self.best, self.curr_pop.get_best()], key=lambda t: t[1])
-        print("Best so far:                          %.4f" % (self.best[1]))
-        print("Build rate:                           %d" % self.best[0].get_build_rate())
-        print("Flaggy rate:                          %d" % self.best[0].get_flaggy_rate())
-        print("Exp mult:                             %d%%" % (100 * self.best[0].get_total_exp_mult()))
+            self.best = max(
+                [self.best, self.curr_pop.get_best()], key=lambda t: t[1])
+        print("Best so far:".ljust(20) + "%.4f" % (self.best[1]))
+        print("Build rate:".ljust(20) + "%d" % self.best[0].get_build_rate())
+        print("Flaggy rate:".ljust(20) + "%d" % self.best[0].get_flaggy_rate())
+        print("Exp mult:".ljust(20) + "%d%%" % (100 * self.best[0].get_total_exp_mult()))
 
     def print_init_info(self):
         print("NUM RESTARTS:   %d" % self.num_restarts)
@@ -180,12 +197,16 @@ class Iteration_Controller:
 - A population of `Cog_Arrays'.
 """
 class Population:
-    def __init__(self,arrays,obj_fxn):
+    def __init__(self, arrays, obj_fxn,
+                 build_obj_fxn, flaggy_obj_fxn, exp_obj_fxn):
         self.arrays = arrays
         self.obj_fxn = obj_fxn
         self.values = list(map(self.obj_fxn,self.arrays))
         self.is_sorted = False
         self.pop_size = len(arrays)
+        self.build_obj_fxn = build_obj_fxn
+        self.flaggy_obj_fxn = flaggy_obj_fxn
+        self.exp_obj_fxn = exp_obj_fxn
 
     def add(self,array):
         self.arrays.append(array)
@@ -203,7 +224,14 @@ class Population:
         return random.sample(list(zip(self.arrays,self.values)),k)
 
     def get_best(self):
-        return self.sort().arrays[0],self.values[0]
+        return self.sort().arrays[0], self.values[0]
+
+    def get_best_with_contributions(self):
+        self.sort()
+        return self.arrays[0], self.values[0],\
+            self.build_obj_fxn(self.arrays[0]),\
+            self.flaggy_obj_fxn(self.arrays[0]),\
+            self.exp_obj_fxn(self.arrays[0])
 
     def get_mean(self):
         return np.mean(self.values)
@@ -234,7 +262,9 @@ class Population:
         return len(self.arrays)
 
     def __copy__(self):
-        return Population([copy.copy(array) for array in self.arrays], self.obj_fxn)
+        return Population([copy.copy(array) for array in self.arrays],
+                          self.obj_fxn, self.build_obj_fxn,
+                          self.flaggy_obj_fxn, self.exp_obj_fxn)
 
 """
 The genetic algorithm.
@@ -260,7 +290,10 @@ def learning_algo(
         factor_base,
         max_factor,
         max_multiplier,
-        controller
+        controller,
+        build_obj_fxn,
+        flaggy_obj_fxn,
+        exp_obj_fxn
 ):
 
     controller.print_init_info()
@@ -290,7 +323,8 @@ def learning_algo(
             cog_array = Cog_Array(empties_set,None,excludes_dict)
             cog_array.instantiate_randomly(cogs)
             pop.append(cog_array)
-        pop = Population(pop,obj_fxn)
+        pop = Population(pop, obj_fxn,
+                         build_obj_fxn, flaggy_obj_fxn, exp_obj_fxn)
 
         controller.set_pop(pop)
         controller.print_restart_status_open()

@@ -190,6 +190,23 @@ class Cog_Array:
     def __ne__(self, other):
         return not(self==other)
 
+    def csv_record(self):
+        ret = ""
+        line = ""
+        i = 1
+        ret += "ID,Xpos,Ypos,Type,Name,Build_Rate,Flaggy_Rate,Exp_Mul,Build_r_Boost,Flaggy_r_boost,Flaggy_s_boost,Exp_boost\n"
+        for i, (coords, cog) in enumerate(self):
+            ret += (
+                ("%d," % (i + 1)) +
+                ("%d," % coords.x) +
+                ("%d," % coords.y) +
+                (cog.csv_record()) +
+                "\n"
+            )
+        for cog in self.spares:
+            ret += ("Spare,Spare,Spare," + cog.csv_record() + "\n")
+        return ret.strip()
+    
     "Call it and see =)"
     def str_with_abbr(self):
         ret = ""
