@@ -199,19 +199,78 @@ def main():
     if verbose or debug:
         print(f"Best cog array found in {toc - tic:0.4f} seconds")
 
-    print("Reading previous cog array data %s" % output_filename)
-    try:
-        with open(output_filename, "r") as fh:
-            print(fh.readline())
-    except BaseException as err:
-        print("No previous array file found at " + output_filename)
+    print("Reading previous cog array data %s" % previous_output_filename)
+    previous_cog_array = []
+#    try:
+    with open(previous_output_filename, 'r') as fh:
+        while (line := fh.readline().rstrip()):
+            previous_cog_array = previous_cog_array + [line]
+#    except BaseException as err:
+#        print("No previous array file found at " + previous_output_filename)
+
+    # build the dictionary for the previous cog array
+    previous_cog_array.pop(0)
+    previous_cog_data_array = {}
+    for cog_line in previous_cog_array:
+        cog_data = cog_line.split(",")
+        cog_data.pop(0)
+        x = cog_data.pop(0)
+        y = cog_data.pop(0)
+        cog_data = tuple(cog_data)
+        if x != "Spare":
+            if cog_data in previous_cog_data_array.keys():
+                previous_cog_data_array[cog_data].append([(x, y), False])
+            else:
+                previous_cog_data_array[cog_data] = [[(x, y), False]]
+            print(cog_data, previous_cog_data_array[cog_data])
+
+    new_cog_array = best[0].csv_record().split("\n")
+    tittle = new_cog_array.pop(0)
+    tittle = tittle.split(",")
+    tittle.insert(3, "origin x")
+    tittle.insert(4, "origin y")
+    tittle = ",".join(tittle)
+    new_cog_data_array = [tittle]
+    for cog_line in new_cog_array:
+        cog_data = cog_data = cog_line.split(",")
+        c_id = cog_data.pop(0)
+        x = cog_data.pop(0)
+        y = cog_data.pop(0)
+        cog_data_tuple = tuple(cog_data)
+        source_x = "shelf"
+        source_y = "shelf"
+        if cog_data_tuple in previous_cog_data_array.keys():
+            i = 0
+            while i < len(previous_cog_data_array[cog_data_tuple]):
+                if previous_cog_data_array[cog_data_tuple][i][1] == False:
+                    source_x = previous_cog_data_array[cog_data_tuple][i][0][0]
+                    source_y = previous_cog_data_array[cog_data_tuple][i][0][1]
+                    previous_cog_data_array[cog_data_tuple][i][1] = True
+                    break
+                i = i + 1
+        cog_data.insert(0, source_y)
+        cog_data.insert(0, source_x)
+        cog_data.insert(0, y)
+        cog_data.insert(0, x)
+        cog_data.insert(0, c_id)
+        new_cog_data_array.append(",".join(cog_data))
+
+    if debug:
+        print(previous_cog_data_array)
+        print("------")
+        print(new_cog_data_array)
+        print("\n".join(new_cog_data_array))
+    
+    print("Writing best cog array save data to %s" % "move_sequence.csv")
+    with open("move_sequence.csv", "w") as fh:
+        fh.write("\n".join(new_cog_data_array))
+    
 
     print("Writing best cog array to %s" % output_filename)
-    with open(output_filename, "w") as fh:
+    with open(output_filename, 'w') as fh:
         fh.writelines([VERSION, "\r\n"])
         fh.write(str(best[0]))
 
-    
     print("Writing best cog array save data to %s" % previous_output_filename)
     with open(previous_output_filename, "w") as fh:
         fh.write(best[0].csv_record())
